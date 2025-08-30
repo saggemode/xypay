@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/admin/product-setup")
@@ -41,7 +40,7 @@ public class ProductSetupAdminController {
     
     @PutMapping("/deposit-config/{id}")
     public ResponseEntity<AccountConfiguration> updateDepositProduct(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @RequestBody AccountConfiguration config) {
         // In a real implementation, we would update the existing record
         AccountConfiguration updatedConfig = configurationService.saveAccountConfiguration(config);
@@ -49,7 +48,7 @@ public class ProductSetupAdminController {
     }
     
     @DeleteMapping("/deposit-config/{id}")
-    public ResponseEntity<Void> deleteDepositProduct(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteDepositProduct(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }
@@ -78,15 +77,15 @@ public class ProductSetupAdminController {
     
     @PutMapping("/loan-config/{id}")
     public ResponseEntity<LoanProductConfiguration> updateLoanProduct(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @RequestBody LoanProductConfiguration config) {
         // In a real implementation, we would update the existing record
         LoanProductConfiguration updatedConfig = configurationService.saveLoanProductConfiguration(config);
         return ResponseEntity.ok(updatedConfig);
     }
-    
+
     @DeleteMapping("/loan-config/{id}")
-    public ResponseEntity<Void> deleteLoanProduct(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteLoanProduct(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }

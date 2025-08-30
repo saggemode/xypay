@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/admin/customer-account")
@@ -35,7 +35,7 @@ public class CustomerAccountAdminController {
     
     @PutMapping("/customer-config/{id}")
     public ResponseEntity<CustomerConfiguration> updateCustomerConfiguration(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @RequestBody CustomerConfiguration config) {
         // In a real implementation, we would update the existing record
         CustomerConfiguration updatedConfig = configurationService.saveCustomerConfiguration(config);
@@ -43,7 +43,7 @@ public class CustomerAccountAdminController {
     }
     
     @DeleteMapping("/customer-config/{id}")
-    public ResponseEntity<Void> deleteCustomerConfiguration(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteCustomerConfiguration(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }
@@ -72,7 +72,7 @@ public class CustomerAccountAdminController {
     
     @PutMapping("/account-config/{id}")
     public ResponseEntity<AccountConfiguration> updateAccountConfiguration(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @RequestBody AccountConfiguration config) {
         // In a real implementation, we would update the existing record
         AccountConfiguration updatedConfig = configurationService.saveAccountConfiguration(config);
@@ -80,7 +80,7 @@ public class CustomerAccountAdminController {
     }
     
     @DeleteMapping("/account-config/{id}")
-    public ResponseEntity<Void> deleteAccountConfiguration(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteAccountConfiguration(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }
