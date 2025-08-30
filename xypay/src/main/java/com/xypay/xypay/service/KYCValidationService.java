@@ -32,7 +32,7 @@ public class KYCValidationService {
     
     private ObjectMapper objectMapper = new ObjectMapper();
     
-    @Value("${app.kyc.remote-url:https://raw.githubusercontent.com/saggemode/djbackend2/master/bvn_nin.json}")
+    @Value("${app.kyc.remote-url:https://github.com/saggemode/xy_backend/blob/master/backend/dummy_kyc_data.json}")
     private String remoteKycUrl;
     
     @Value("${app.kyc.fallback-file:dummy_kyc_data.json}")
