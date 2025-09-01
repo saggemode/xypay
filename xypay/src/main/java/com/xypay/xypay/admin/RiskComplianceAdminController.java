@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/admin/risk-compliance")
@@ -46,17 +46,17 @@ public class RiskComplianceAdminController {
         return ResponseEntity.ok(configs);
     }
     
-    @PutMapping("/compliance-config/{id}")
-    public ResponseEntity<RiskComplianceConfiguration> updateComplianceConfig(
-            @PathVariable UUID id,
+    @PutMapping("/risk-config/{id}")
+    public ResponseEntity<RiskComplianceConfiguration> updateRiskComplianceConfiguration(
+            @PathVariable Long id,
             @RequestBody RiskComplianceConfiguration config) {
         // In a real implementation, we would update the existing record
         RiskComplianceConfiguration updatedConfig = configurationService.saveRiskComplianceConfiguration(config);
         return ResponseEntity.ok(updatedConfig);
     }
     
-    @DeleteMapping("/compliance-config/{id}")
-    public ResponseEntity<Void> deleteComplianceConfig(@PathVariable UUID id) {
+    @DeleteMapping("/risk-config/{id}")
+    public ResponseEntity<Void> deleteRiskComplianceConfiguration(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }
@@ -91,8 +91,8 @@ public class RiskComplianceAdminController {
     }
     
     @PutMapping("/branch-config/{id}")
-    public ResponseEntity<BranchEntityConfiguration> updateBranchConfig(
-            @PathVariable UUID id,
+    public ResponseEntity<BranchEntityConfiguration> updateBranchEntityConfiguration(
+            @PathVariable Long id,
             @RequestBody BranchEntityConfiguration config) {
         // In a real implementation, we would update the existing record
         BranchEntityConfiguration updatedConfig = configurationService.saveBranchEntityConfiguration(config);
@@ -100,7 +100,7 @@ public class RiskComplianceAdminController {
     }
     
     @DeleteMapping("/branch-config/{id}")
-    public ResponseEntity<Void> deleteBranchConfig(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteBranchEntityConfiguration(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }

@@ -3,51 +3,601 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration Monitor - CSO</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: #f8fafc; }
-        .dashboard-header { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 32px 24px; margin-bottom: 32px; }
-        .dashboard-header h1 { font-size: 2.2rem; font-weight: 700; color: #2d3748; }
-        .dashboard-header p { color: #4a5568; }
-        .stats-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px; margin-bottom: 24px; }
-        .stats-number { font-size: 2rem; font-weight: 700; color: #2d3748; }
-        .stats-label { color: #4a5568; font-size: 0.9rem; }
-        .registration-table { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px; }
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-        .status-pending { background: #fef3c7; color: #92400e; }
-        .status-verified { background: #d1fae5; color: #065f46; }
-        .status-incomplete { background: #fee2e2; color: #991b1b; }
-        .action-btn { padding: 4px 12px; font-size: 0.8rem; }
-        .priority-high { border-left: 4px solid #ef4444; }
-        .priority-medium { border-left: 4px solid #f59e0b; }
-        .priority-low { border-left: 4px solid #10b981; }
-    </style>
+    <title>XyPay User Registration Monitor Console - Java Style</title>
+    <link rel="stylesheet" href="/css/java-swing-style.css">
 </head>
 <body>
-    <main class="container py-4">
-        <div class="dashboard-header">
-            <h1>Registration Monitor - CSO</h1>
-            <p>Assist customers with registration issues and verification support</p>
+    <div class="java-window">
+        <!-- Title Bar -->
+        <div class="title-bar">
+            <span>XyPay User Registration Monitor Console - CSO Interface</span>
+            <div class="window-controls">
+                <div class="window-btn">_</div>
+                <div class="window-btn">□</div>
+                <div class="window-btn">×</div>
+            </div>
         </div>
-
-        <!-- Quick Stats -->
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="stats-card text-center">
-                    <div class="stats-number text-warning" id="pendingSupport">0</div>
-                    <div class="stats-label">Pending Support</div>
+        
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <span class="menu-item">File</span>
+            <span class="menu-item">Registration</span>
+            <span class="menu-item">Verification</span>
+            <span class="menu-item">Support</span>
+            <span class="menu-item">Reports</span>
+            <span class="menu-item">Tools</span>
+            <span class="menu-item">Help</span>
+        </div>
+        
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <button class="toolbar-btn">New Registration</button>
+            <button class="toolbar-btn">Search User</button>
+            <button class="toolbar-btn">Verify KYC</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn">Approve</button>
+            <button class="toolbar-btn">Reject</button>
+            <button class="toolbar-btn">Request Info</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn">Reports</button>
+            <button class="toolbar-btn">Export</button>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Left Navigation Panel -->
+            <div class="tree-panel">
+                <div class="tree-header">Registration Monitor</div>
+                
+                <div class="tree-node selected" onclick="selectRegistrationModule(this, 'dashboard')">
+                    <div class="tree-icon">📊</div>
+                    Registration Dashboard
+                </div>
+                
+                <div class="tree-node" onclick="selectRegistrationModule(this, 'pending')">
+                    <div class="tree-icon">⏳</div>
+                    Pending Registrations
+                </div>
+                
+                <div class="tree-node" onclick="selectRegistrationModule(this, 'verification')">
+                    <div class="tree-icon">🔍</div>
+                    KYC Verification
+                </div>
+                
+                <div class="tree-node" onclick="selectRegistrationModule(this, 'approved')">
+                    <div class="tree-icon">✅</div>
+                    Approved Users
+                </div>
+                
+                <div class="tree-node" onclick="selectRegistrationModule(this, 'rejected')">
+                    <div class="tree-icon">❌</div>
+                    Rejected Applications
+                </div>
+                
+                <div class="tree-node" onclick="selectRegistrationModule(this, 'support')">
+                    <div class="tree-icon">🎧</div>
+                    Support Requests
+                </div>
+                
+                <div class="tree-node" onclick="selectRegistrationModule(this, 'reports')">
+                    <div class="tree-icon">📈</div>
+                    Registration Reports
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="stats-card text-center">
-                    <div class="stats-number text-success" id="resolvedToday">0</div>
-                    <div class="stats-label">Resolved Today</div>
+            
+            <!-- Right Details Panel -->
+            <div class="details-panel">
+                <div class="details-header">User Registration Monitoring</div>
+                <div class="details-content" id="registration-content">
+                    
+                    <!-- Registration Dashboard -->
+                    <div class="config-section">
+                        <div class="config-header">Registration Dashboard Overview</div>
+                        <div class="config-content">
+                            
+                            <!-- Key Metrics -->
+                            <fieldset style="border: 1px inset #c0c0c0; padding: 12px; margin-bottom: 16px;">
+                                <legend style="font-weight: bold; font-size: 12px;">Registration Statistics</legend>
+                                
+                                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+                                    <div class="metric-card">
+                                        <div class="metric-value" id="pendingSupport">24</div>
+                                        <div class="metric-label">Pending Support</div>
+                                        <div class="metric-change" style="color: orange;">+3 today</div>
+                                    </div>
+                                    
+                                    <div class="metric-card">
+                                        <div class="metric-value" id="resolvedToday">18</div>
+                                        <div class="metric-label">Resolved Today</div>
+                                        <div class="metric-change" style="color: green;">+12%</div>
+                                    </div>
+                                    
+                                    <div class="metric-card">
+                                        <div class="metric-value" id="newRegistrations">67</div>
+                                        <div class="metric-label">New Registrations</div>
+                                        <div class="metric-change" style="color: green;">+8.5%</div>
+                                    </div>
+                                    
+                                    <div class="metric-card">
+                                        <div class="metric-value">92.3%</div>
+                                        <div class="metric-label">Success Rate</div>
+                                        <div class="metric-change" style="color: green;">+2.1%</div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            
+                            <!-- Recent Registration Activities -->
+                            <fieldset style="border: 1px inset #c0c0c0; padding: 12px; margin-bottom: 16px;">
+                                <legend style="font-weight: bold; font-size: 12px;">Recent Registration Activities</legend>
+                                
+                                <table class="java-table">
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>User</th>
+                                        <th>Phone</th>
+                                        <th>Registration Step</th>
+                                        <th>Status</th>
+                                        <th>Priority</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    <tr>
+                                        <td>11:45 AM</td>
+                                        <td>John Doe</td>
+                                        <td>+234-xxx-1234</td>
+                                        <td>KYC Verification</td>
+                                        <td style="color: orange;">Pending</td>
+                                        <td style="color: red;">High</td>
+                                        <td>
+                                            <button class="java-btn primary">Review</button>
+                                            <button class="java-btn">Contact</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>11:30 AM</td>
+                                        <td>Jane Smith</td>
+                                        <td>+234-xxx-5678</td>
+                                        <td>Document Upload</td>
+                                        <td style="color: blue;">In Progress</td>
+                                        <td style="color: orange;">Medium</td>
+                                        <td>
+                                            <button class="java-btn">Assist</button>
+                                            <button class="java-btn">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>11:15 AM</td>
+                                        <td>Mike Johnson</td>
+                                        <td>+234-xxx-9012</td>
+                                        <td>Phone Verification</td>
+                                        <td style="color: green;">Completed</td>
+                                        <td style="color: green;">Low</td>
+                                        <td>
+                                            <button class="java-btn">View Details</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                            
+                            <!-- Quick Actions -->
+                            <fieldset style="border: 1px inset #c0c0c0; padding: 12px; margin-bottom: 16px;">
+                                <legend style="font-weight: bold; font-size: 12px;">Quick Actions</legend>
+                                
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                                    <button class="java-btn primary" onclick="assistRegistration()">Assist Registration</button>
+                                    <button class="java-btn" onclick="verifyKYC()">Verify KYC Documents</button>
+                                    <button class="java-btn" onclick="resendOTP()">Resend OTP</button>
+                                    <button class="java-btn" onclick="unlockAccount()">Unlock Account</button>
+                                    <button class="java-btn" onclick="generateReport()">Generate Report</button>
+                                    <button class="java-btn" onclick="bulkApproval()">Bulk Approval</button>
+                                </div>
+                            </fieldset>
+                            
+                            <!-- Support Queue -->
+                            <fieldset style="border: 1px inset #c0c0c0; padding: 12px; margin-bottom: 16px;">
+                                <legend style="font-weight: bold; font-size: 12px;">Support Queue</legend>
+                                
+                                <div class="support-queue">
+                                    <div class="support-item priority-high">
+                                        <div class="support-user">Sarah Wilson - +234-xxx-3456</div>
+                                        <div class="support-issue">Unable to upload ID document - File size error</div>
+                                        <div class="support-time">Waiting: 15 minutes</div>
+                                        <div class="support-actions">
+                                            <button class="java-btn primary">Take Call</button>
+                                            <button class="java-btn">Send Instructions</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="support-item priority-medium">
+                                        <div class="support-user">Robert Brown - +234-xxx-7890</div>
+                                        <div class="support-issue">OTP not received for phone verification</div>
+                                        <div class="support-time">Waiting: 8 minutes</div>
+                                        <div class="support-actions">
+                                            <button class="java-btn primary">Resend OTP</button>
+                                            <button class="java-btn">Call Customer</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="support-item priority-low">
+                                        <div class="support-user">Lisa Davis - +234-xxx-2468</div>
+                                        <div class="support-issue">Question about account features</div>
+                                        <div class="support-time">Waiting: 3 minutes</div>
+                                        <div class="support-actions">
+                                            <button class="java-btn">Send Info</button>
+                                            <button class="java-btn">Schedule Call</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="stats-card text-center">
-                    <div class="stats-number text-info" id="newRegistrations">0</div>
+        </div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>Registration Monitor Ready | Pending Support: <span id="statusPendingSupport">24</span> | Active Sessions: <span id="activeSessions">12</span></span>
+            <span>CSO: cso@xypay.com | Session: Active</span>
+        </div>
+    </div>
+    
+    <script>
+        function selectRegistrationModule(element, moduleType) {
+            // Update tree selection
+            if (element) {
+                document.querySelectorAll('.tree-node').forEach(node => {
+                    node.classList.remove('selected');
+                });
+                element.classList.add('selected');
+            }
+            
+            // Load module content
+            const content = document.getElementById('registration-content');
+            
+            switch(moduleType) {
+                case 'pending':
+                    content.innerHTML = getPendingRegistrationsContent();
+                    break;
+                case 'verification':
+                    content.innerHTML = getKYCVerificationContent();
+                    break;
+                case 'approved':
+                    content.innerHTML = getApprovedUsersContent();
+                    break;
+                case 'rejected':
+                    content.innerHTML = getRejectedApplicationsContent();
+                    break;
+                case 'support':
+                    content.innerHTML = getSupportRequestsContent();
+                    break;
+                case 'reports':
+                    content.innerHTML = getRegistrationReportsContent();
+                    break;
+                default:
+                    // Keep default dashboard
+                    break;
+            }
+        }
+        
+        function assistRegistration() {
+            alert('Opening registration assistance interface...');
+        }
+        
+        function verifyKYC() {
+            alert('Opening KYC verification panel...');
+        }
+        
+        function resendOTP() {
+            alert('Resending OTP to selected user...');
+        }
+        
+        function unlockAccount() {
+            alert('Opening account unlock interface...');
+        }
+        
+        function generateReport() {
+            alert('Opening report generator...');
+        }
+        
+        function bulkApproval() {
+            alert('Opening bulk approval interface...');
+        }
+        
+        function getPendingRegistrationsContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Pending User Registrations</div>
+                    <div class="config-content">
+                        <div class="form-row">
+                            <span class="form-label">Filter by Status:</span>
+                            <select class="form-select" style="width: 200px;">
+                                <option>All Pending</option>
+                                <option>KYC Verification</option>
+                                <option>Document Upload</option>
+                                <option>Phone Verification</option>
+                                <option>Email Verification</option>
+                            </select>
+                            <button class="java-btn">Filter</button>
+                            <button class="java-btn primary">Bulk Actions</button>
+                        </div>
+                        
+                        <table class="java-table" style="margin-top: 16px;">
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>Registration ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Current Step</th>
+                                <th>Started</th>
+                                <th>Priority</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>REG001234</td>
+                                <td>John Doe</td>
+                                <td>+234-xxx-1234</td>
+                                <td>john.doe@email.com</td>
+                                <td>KYC Verification</td>
+                                <td>2024-01-15 10:30</td>
+                                <td style="color: red;">High</td>
+                                <td>
+                                    <button class="java-btn primary">Review</button>
+                                    <button class="java-btn">Contact</button>
+                                    <button class="java-btn">Approve</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getKYCVerificationContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">KYC Document Verification</div>
+                    <div class="config-content">
+                        <fieldset style="border: 1px inset #c0c0c0; padding: 12px; margin-bottom: 16px;">
+                            <legend style="font-weight: bold; font-size: 12px;">Document Review Queue</legend>
+                            
+                            <table class="java-table">
+                                <tr>
+                                    <th>User</th>
+                                    <th>Document Type</th>
+                                    <th>Uploaded</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                <tr>
+                                    <td>Jane Smith</td>
+                                    <td>National ID</td>
+                                    <td>2024-01-15 11:30</td>
+                                    <td style="color: orange;">Pending Review</td>
+                                    <td>
+                                        <button class="java-btn primary">Review</button>
+                                        <button class="java-btn">Download</button>
+                                        <button class="java-btn">Approve</button>
+                                        <button class="java-btn">Reject</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getApprovedUsersContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Recently Approved Users</div>
+                    <div class="config-content">
+                        <table class="java-table">
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Account Number</th>
+                                <th>Approved Date</th>
+                                <th>CSO</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <td>USR001234</td>
+                                <td>Mike Johnson</td>
+                                <td>+234-xxx-9012</td>
+                                <td>1234567890</td>
+                                <td>2024-01-15 11:15</td>
+                                <td>Sarah M.</td>
+                                <td><button class="java-btn">View Profile</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getRejectedApplicationsContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Rejected Registration Applications</div>
+                    <div class="config-content">
+                        <table class="java-table">
+                            <tr>
+                                <th>Registration ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Rejection Reason</th>
+                                <th>Rejected Date</th>
+                                <th>CSO</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <td>REG001235</td>
+                                <td>Bob Wilson</td>
+                                <td>+234-xxx-3456</td>
+                                <td>Invalid ID Document</td>
+                                <td>2024-01-14 15:30</td>
+                                <td>Mike R.</td>
+                                <td>
+                                    <button class="java-btn">View Details</button>
+                                    <button class="java-btn">Reconsider</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getSupportRequestsContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Registration Support Requests</div>
+                    <div class="config-content">
+                        <div class="form-row">
+                            <span class="form-label">Priority Filter:</span>
+                            <select class="form-select" style="width: 150px;">
+                                <option>All Priorities</option>
+                                <option>High Priority</option>
+                                <option>Medium Priority</option>
+                                <option>Low Priority</option>
+                            </select>
+                            <button class="java-btn">Filter</button>
+                        </div>
+                        
+                        <div class="support-queue" style="margin-top: 16px;">
+                            <div class="support-item priority-high">
+                                <div class="support-user">Sarah Wilson - +234-xxx-3456</div>
+                                <div class="support-issue">Unable to upload ID document - File size error</div>
+                                <div class="support-time">Waiting: 15 minutes</div>
+                                <div class="support-actions">
+                                    <button class="java-btn primary">Take Call</button>
+                                    <button class="java-btn">Send Instructions</button>
+                                    <button class="java-btn">Escalate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getRegistrationReportsContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Registration Reports & Analytics</div>
+                    <div class="config-content">
+                        <div class="form-row">
+                            <span class="form-label">Report Type:</span>
+                            <select class="form-select">
+                                <option>Daily Registration Summary</option>
+                                <option>KYC Approval Rates</option>
+                                <option>Support Response Times</option>
+                                <option>Registration Funnel Analysis</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">Date Range:</span>
+                            <input type="date" class="form-input" style="width: 150px;">
+                            <span>to</span>
+                            <input type="date" class="form-input" style="width: 150px;">
+                        </div>
+                        <div style="text-align: center; margin-top: 16px;">
+                            <button class="java-btn primary">Generate Report</button>
+                            <button class="java-btn">Export to Excel</button>
+                            <button class="java-btn">Schedule Report</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Initialize
+        window.onload = function() {
+            document.getElementById('statusPendingSupport').textContent = '24';
+            document.getElementById('activeSessions').textContent = '12';
+        };
+    </script>
+    
+    <style>
+        .metric-card {
+            background: #f0f0f0;
+            border: 1px inset #c0c0c0;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .metric-label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .metric-change {
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+        
+        .support-queue {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .support-item {
+            border: 1px inset #c0c0c0;
+            padding: 12px;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+        
+        .priority-high {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .priority-medium {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .priority-low {
+            border-left: 4px solid #10b981;
+        }
+        
+        .support-user {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .support-issue {
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .support-time {
+            color: #999;
+            font-size: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .support-actions button {
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+    </style>
+</body>
+</html>
                     <div class="stats-label">New Registrations</div>
                 </div>
             </div>

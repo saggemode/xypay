@@ -3,51 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Role Management - XY Pay Banking System</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+    <title>XyPay Role Management Console - Java Style</title>
+    <link rel="stylesheet" href="/css/java-swing-style.css">
+</head>
+<body>
+    <div class="java-window">
+        <!-- Title Bar -->
+        <div class="title-bar">
+            <span>XyPay Role Management Console - Security Administration</span>
+            <div class="window-controls">
+                <div class="window-btn">_</div>
+                <div class="window-btn">□</div>
+                <div class="window-btn">×</div>
+            </div>
+        </div>
+        
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <span class="menu-item">File</span>
+            <span class="menu-item">Roles</span>
+            <span class="menu-item">Permissions</span>
+            <span class="menu-item">Security</span>
+            <span class="menu-item">Reports</span>
+            <span class="menu-item">Tools</span>
+            <span class="menu-item">Help</span>
+        </div>
+        
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <button class="toolbar-btn">New Role</button>
+            <button class="toolbar-btn">Edit Role</button>
+            <button class="toolbar-btn">Delete Role</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn">Assign Permissions</button>
+            <button class="toolbar-btn">Clone Role</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn">Import</button>
+            <button class="toolbar-btn">Export</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn">Refresh</button>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Left Navigation Panel -->
+            <div class="tree-panel">
+                <div class="tree-header">Role Categories</div>
+                
+                <div class="tree-node selected" onclick="selectRoleCategory(this, 'all')">
+                    <div class="tree-icon">📋</div>
+                    All Roles
+                </div>
+                
+                <div class="tree-node" onclick="selectRoleCategory(this, 'admin')">
+                    <div class="tree-icon">👑</div>
+                    Administrative Roles
+                </div>
+                
+                <div class="tree-node" onclick="selectRoleCategory(this, 'operational')">
+                    <div class="tree-icon">⚙️</div>
+                    Operational Roles
+                </div>
+                
+                <div class="tree-node" onclick="selectRoleCategory(this, 'customer')">
+                    <div class="tree-icon">👥</div>
+                    Customer Service Roles
+                </div>
+                
+                <div class="tree-node" onclick="selectRoleCategory(this, 'financial')">
+                    <div class="tree-icon">💰</div>
+                    Financial Roles
+                </div>
+                
+                <div class="tree-node" onclick="selectRoleCategory(this, 'permissions')">
+                    <div class="tree-icon">🔐</div>
+                    Permission Matrix
+                </div>
+            </div>
+            
+            <!-- Right Details Panel -->
+            <div class="details-panel">
+                <div class="details-header">Role Management Console</div>
+                <div class="details-content" id="role-content">
+                    
+                    <!-- Role Overview -->
+                    <div class="config-section">
+                        <div class="config-header">System Roles Overview</div>
+                        <div class="config-content">
+                            <p>Manage user roles and permissions for the XyPay banking system.</p>
+                            <p><strong>Total Roles:</strong> <span id="totalRoles">8</span> | <strong>Active:</strong> <span id="activeRoles">7</span> | <strong>Custom:</strong> <span id="customRoles">3</span></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Role List -->
+                    <div class="config-section">
+                        <div class="config-header">Role Configuration</div>
+                        <div class="config-content">
+                            <table class="java-table">
+                                <tr>
+                                    <th>Role Name</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Users</th>
+                                    <th>Permissions</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                <tr>
+                                    <td><strong>SUPER_ADMIN</strong></td>
+                                    <td>System Super Administrator</td>
+                                    <td>System</td>
+                                    <td>1</td>
+                                    <td>All Permissions</td>
+                                    <td style="color: green;">Active</td>
+                                    <td>
+                                        <button class="java-btn" onclick="editRole('SUPER_ADMIN')">Edit</button>
+                                        <button class="java-btn" onclick="viewPermissions('SUPER_ADMIN')">Permissions</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ADMIN</strong></td>
+                                    <td>System Administrator</td>
+                                    <td>System</td>
+                                    <td>3</td>
+                                    <td>Administrative</td>
+                                    <td style="color: green;">Active</td>
+                                    <td>
+                                        <button class="java-btn" onclick="editRole('ADMIN')">Edit</button>
+                                        <button class="java-btn" onclick="viewPermissions('ADMIN')">Permissions</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MANAGER</strong></td>
+                                    <td>Branch Manager</td>
+                                    <td>Operational</td>
+                                    <td>5</td>
+                                    <td>Management</td>
+                                    <td style="color: green;">Active</td>
+                                    <td>
+                                        <button class="java-btn" onclick="editRole('MANAGER')">Edit</button>
+                                        <button class="java-btn" onclick="viewPermissions('MANAGER')">Permissions</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>TELLER</strong></td>
+                                    <td>Bank Teller</td>
+                                    <td>Operational</td>
+                                    <td>25</td>
+                                    <td>Transaction Processing</td>
+                                    <td style="color: green;">Active</td>
+                                    <td>
+                                        <button class="java-btn" onclick="editRole('TELLER')">Edit</button>
+                                        <button class="java-btn" onclick="viewPermissions('TELLER')">Permissions</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CSO</strong></td>
+                                    <td>Customer Service Officer</td>
+                                    <td>Customer Service</td>
+                                    <td>12</td>
+                                    <td>Customer Management</td>
+                                    <td style="color: green;">Active</td>
+                                    <td>
+                                        <button class="java-btn" onclick="editRole('CSO')">Edit</button>
+                                        <button class="java-btn" onclick="viewPermissions('CSO')">Permissions</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>LOAN_OFFICER</strong></td>
+                                    <td>Loan Officer</td>
+                                    <td>Financial</td>
+                                    <td>8</td>
+                                    <td>Loan Processing</td>
+                                    <td style="color: green;">Active</td>
+                                    <td>
+                                        <button class="java-btn" onclick="editRole('LOAN_OFFICER')">Edit</button>
+                                        <button class="java-btn" onclick="viewPermissions('LOAN_OFFICER')">Permissions</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>AUDITOR</strong></td>
+                                    <td>System Auditor</td>
+                                    <td>Compliance</td>
+                                    <td>2</td>
+                                    <td>Read-Only Access</td>
+                                    <td style="color: green;">Active</td>
+                                    <td>
+                                        <button class="java-btn" onclick="editRole('AUDITOR')">Edit</button>
+                                        <button class="java-btn" onclick="viewPermissions('AUDITOR')">Permissions</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GUEST</strong></td>
+                                    <td>Guest User</td>
+                                    <td>Custom</td>
+                                    <td>0</td>
+                                    <td>Limited Access</td>
+                                    <td style="color: orange;">Inactive</td>
+                                    <td>
+                                        <button class="java-btn" onclick="editRole('GUEST')">Edit</button>
+                                        <button class="java-btn" onclick="activateRole('GUEST')">Activate</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Role Actions -->
+                    <div class="config-section">
+                        <div class="config-header">Role Management Actions</div>
+                        <div class="config-content">
+                            <div style="text-align: center;">
+                                <button class="java-btn primary" onclick="createNewRole()">Create New Role</button>
+                                <button class="java-btn" onclick="cloneRole()">Clone Existing Role</button>
+                                <button class="java-btn" onclick="importRoles()">Import Roles</button>
+                                <button class="java-btn" onclick="exportRoles()">Export Roles</button>
+                                <button class="java-btn" onclick="generateRoleReport()">Generate Report</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>Role Management Console Ready | Total Roles: <span id="statusTotalRoles">8</span> | Active Users: <span id="statusActiveUsers">56</span></span>
+            <span>Administrator: admin@xypay.com | Security Level: High</span>
+        </div>
+    </div>
+    
+    <script>
+        function selectRoleCategory(element, categoryType) {
+            // Update tree selection
+            if (element) {
+                document.querySelectorAll('.tree-node').forEach(node => {
+                    node.classList.remove('selected');
+                });
+                element.classList.add('selected');
+            }
+            
+            // Load category content
+            const content = document.getElementById('role-content');
+            
+            switch(categoryType) {
+                case 'admin':
+                    content.innerHTML = getAdminRolesContent();
+                    break;
+                case 'operational':
+                    content.innerHTML = getOperationalRolesContent();
+                    break;
+                case 'customer':
+                    content.innerHTML = getCustomerServiceRolesContent();
+                    break;
+                case 'financial':
+                    content.innerHTML = getFinancialRolesContent();
+                    break;
+                case 'permissions':
+                    content.innerHTML = getPermissionMatrixContent();
+                    break;
+                default:
+                    // Keep default role content
+                    break;
+            }
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        
+        function getAdminRolesContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Administrative Roles</div>
+                    <div class="config-content">
+                        <table class="java-table">
+                            <tr>
+                                <th>Role</th>
+                                <th>Level</th>
+                                <th>Users</th>
+                                <th>Key Permissions</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <td>SUPER_ADMIN</td>
+                                <td>Level 5</td>
+                                <td>1</td>
+                                <td>System Control, User Management, Security</td>
+                                <td><button class="java-btn">Manage</button></td>
+                            </tr>
+                            <tr>
+                                <td>ADMIN</td>
+                                <td>Level 4</td>
+                                <td>3</td>
+                                <td>User Management, Configuration, Reports</td>
+                                <td><button class="java-btn">Manage</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
         }
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
+        
+        function getOperationalRolesContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Operational Roles</div>
+                    <div class="config-content">
+                        <table class="java-table">
+                            <tr>
+                                <th>Role</th>
+                                <th>Department</th>
+                                <th>Users</th>
+                                <th>Primary Functions</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <td>MANAGER</td>
+                                <td>Branch Operations</td>
+                                <td>5</td>
+                                <td>Staff Management, Approvals, Oversight</td>
+                                <td><button class="java-btn">Manage</button></td>
+                            </tr>
+                            <tr>
+                                <td>TELLER</td>
+                                <td>Customer Service</td>
+                                <td>25</td>
+                                <td>Transactions, Cash Handling, Customer Service</td>
+                                <td><button class="java-btn">Manage</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
         }
-        .header h1 {
-            color: #2c3e50;
-            margin: 0;
-            font-size: 2.5em;
-            text-align: center;
+        
+        function getCustomerServiceRolesContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Customer Service Roles</div>
+                    <div class="config-content">
+                        <table class="java-table">
+                            <tr>
+                                <th>Role</th>
+                                <th>Specialization</th>
+                                <th>Users</th>
+                                <th>Responsibilities</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <td>CSO</td>
+                                <td>General Customer Service</td>
+                                <td>12</td>
+                                <td>Account Opening, KYC, Customer Support</td>
+                                <td><button class="java-btn">Manage</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
         }
-        .header p {
-            color: #7f8c8d;
-            text-align: center;
-            margin: 10px 0 0 0;
-            font-size: 1.1em;
+        
+        function getFinancialRolesContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Financial Roles</div>
+                    <div class="config-content">
+                        <table class="java-table">
+                            <tr>
+                                <th>Role</th>
+                                <th>Department</th>
+                                <th>Users</th>
+                                <th>Financial Authority</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <td>LOAN_OFFICER</td>
+                                <td>Credit & Loans</td>
+                                <td>8</td>
+                                <td>Loan Processing, Credit Assessment</td>
+                                <td><button class="java-btn">Manage</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
         }
-        .roles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
+        
+        function getPermissionMatrixContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Permission Matrix</div>
+                    <div class="config-content">
+                        <table class="java-table">
+                            <tr>
+                                <th>Permission</th>
+                                <th>ADMIN</th>
+                                <th>MANAGER</th>
+                                <th>TELLER</th>
+                                <th>CSO</th>
+                                <th>LOAN_OFFICER</th>
+                            </tr>
+                            <tr>
+                                <td>User Management</td>
+                                <td style="color: green;">✓</td>
+                                <td style="color: orange;">Limited</td>
+                                <td style="color: red;">✗</td>
+                                <td style="color: red;">✗</td>
+                                <td style="color: red;">✗</td>
+                            </tr>
+                            <tr>
+                                <td>Transaction Processing</td>
+                                <td style="color: green;">✓</td>
+                                <td style="color: green;">✓</td>
+                                <td style="color: green;">✓</td>
+                                <td style="color: orange;">Limited</td>
+                                <td style="color: orange;">Limited</td>
+                            </tr>
+                            <tr>
+                                <td>System Configuration</td>
+                                <td style="color: green;">✓</td>
+                                <td style="color: red;">✗</td>
+                                <td style="color: red;">✗</td>
+                                <td style="color: red;">✗</td>
+                                <td style="color: red;">✗</td>
+                            </tr>
+                            <tr>
+                                <td>Report Generation</td>
+                                <td style="color: green;">✓</td>
+                                <td style="color: green;">✓</td>
+                                <td style="color: orange;">Limited</td>
+                                <td style="color: orange;">Limited</td>
+                                <td style="color: green;">✓</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
         }
-        .role-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        
+        function editRole(roleName) {
+            alert('Editing role: ' + roleName);
+        }
+        
+        function viewPermissions(roleName) {
+            alert('Viewing permissions for role: ' + roleName);
+        }
+        
+        function activateRole(roleName) {
+            alert('Activating role: ' + roleName);
+        }
+        
+        function createNewRole() {
+            alert('Opening create new role dialog');
+        }
+        
+        function cloneRole() {
+            alert('Opening clone role dialog');
+        }
+        
+        function importRoles() {
+            alert('Opening import roles dialog');
+        }
+        
+        function exportRoles() {
+            alert('Exporting roles configuration');
+        }
+        
+        function generateRoleReport() {
+            alert('Generating role management report');
+        }
+        
+        // Initialize
+        window.onload = function() {
+            document.getElementById('totalRoles').textContent = '8';
+            document.getElementById('activeRoles').textContent = '7';
+            document.getElementById('customRoles').textContent = '3';
+            document.getElementById('statusTotalRoles').textContent = '8';
+            document.getElementById('statusActiveUsers').textContent = '56';
+        };
+    </script>
+</body>
+</html>
             backdrop-filter: blur(10px);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border-left: 5px solid #667eea;

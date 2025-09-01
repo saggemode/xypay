@@ -9,7 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+
+
 
 @RestController
 @RequestMapping("/admin/interest-charges")
@@ -41,8 +42,8 @@ public class InterestChargesAdminController {
     }
     
     @PutMapping("/interest-config/{id}")
-    public ResponseEntity<InterestConfiguration> updateInterestConfig(
-            @PathVariable UUID id,
+    public ResponseEntity<InterestConfiguration> updateInterestConfiguration(
+            @PathVariable Long id,
             @RequestBody InterestConfiguration config) {
         // In a real implementation, we would update the existing record
         InterestConfiguration updatedConfig = configurationService.saveInterestConfiguration(config);
@@ -50,7 +51,7 @@ public class InterestChargesAdminController {
     }
     
     @DeleteMapping("/interest-config/{id}")
-    public ResponseEntity<Void> deleteInterestConfig(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteInterestConfiguration(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }
@@ -86,8 +87,8 @@ public class InterestChargesAdminController {
     }
     
     @PutMapping("/charge-config/{id}")
-    public ResponseEntity<ChargeConfiguration> updateChargeConfig(
-            @PathVariable UUID id,
+    public ResponseEntity<ChargeConfiguration> updateChargeConfiguration(
+            @PathVariable Long id,
             @RequestBody ChargeConfiguration config) {
         // In a real implementation, we would update the existing record
         ChargeConfiguration updatedConfig = configurationService.saveChargeConfiguration(config);
@@ -95,7 +96,7 @@ public class InterestChargesAdminController {
     }
     
     @DeleteMapping("/charge-config/{id}")
-    public ResponseEntity<Void> deleteChargeConfig(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteChargeConfiguration(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }
@@ -131,8 +132,8 @@ public class InterestChargesAdminController {
     }
     
     @PutMapping("/rule-config/{id}")
-    public ResponseEntity<TransactionRuleConfiguration> updateRuleConfig(
-            @PathVariable UUID id,
+    public ResponseEntity<TransactionRuleConfiguration> updateTransactionRuleConfiguration(
+            @PathVariable Long id,
             @RequestBody TransactionRuleConfiguration config) {
         // In a real implementation, we would update the existing record
         TransactionRuleConfiguration updatedConfig = configurationService.saveTransactionRuleConfiguration(config);
@@ -140,7 +141,7 @@ public class InterestChargesAdminController {
     }
     
     @DeleteMapping("/rule-config/{id}")
-    public ResponseEntity<Void> deleteRuleConfig(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteTransactionRuleConfiguration(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }

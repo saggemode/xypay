@@ -18,7 +18,7 @@ public class TellerService {
     private TransactionRepository transactionRepository;
 
     public String deposit(String accountNumber, BigDecimal amount) {
-        Optional<Wallet> walletOpt = walletRepository.findByAccountNumber(accountNumber);
+        Optional<Wallet> walletOpt = walletRepository.findByAccountNumberOrAlternativeAccountNumber(accountNumber, accountNumber);
         if (walletOpt.isEmpty()) {
             return "Account not found";
         }
@@ -37,13 +37,13 @@ public class TellerService {
     }
 
     public BigDecimal getBalance(String accountNumber) {
-        Optional<Wallet> walletOpt = walletRepository.findByAccountNumber(accountNumber);
+        Optional<Wallet> walletOpt = walletRepository.findByAccountNumberOrAlternativeAccountNumber(accountNumber, accountNumber);
         return walletOpt.map(wallet -> wallet.getBalance() != null ? wallet.getBalance() : BigDecimal.ZERO)
                 .orElse(BigDecimal.ZERO);
     }
 
     public java.util.List<Transaction> getTransactionHistory(String accountNumber) {
-        Optional<Wallet> walletOpt = walletRepository.findByAccountNumber(accountNumber);
+        Optional<Wallet> walletOpt = walletRepository.findByAccountNumberOrAlternativeAccountNumber(accountNumber, accountNumber);
         if (walletOpt.isPresent()) {
             return transactionRepository.findByWalletId(walletOpt.get().getId(), 
                 org.springframework.data.domain.Pageable.unpaged()).getContent();
@@ -52,7 +52,7 @@ public class TellerService {
     }
 
     public String withdrawal(String accountNumber, BigDecimal amount) {
-        Optional<Wallet> walletOpt = walletRepository.findByAccountNumber(accountNumber);
+        Optional<Wallet> walletOpt = walletRepository.findByAccountNumberOrAlternativeAccountNumber(accountNumber, accountNumber);
         if (walletOpt.isEmpty()) {
             return "Account not found";
         }

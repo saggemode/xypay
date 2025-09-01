@@ -133,10 +133,10 @@ public class UserRegistrationService {
             profile.generatePhoneVerificationToken();
             profile = userProfileRepository.save(profile);
             
-            // Create wallet for the user
+            // Create wallet for the user with phone number as account number
             Wallet wallet = null;
             try {
-                wallet = walletService.createWallet(user, "NGN");
+                wallet = walletService.createWallet(user, "NGN", phone);
             } catch (Exception e) {
                 throw new RuntimeException("Failed to create wallet: " + e.getMessage(), e);
             }
@@ -185,6 +185,7 @@ public class UserRegistrationService {
             response.put("message", "Registration successful. Please verify your phone number with the OTP sent.");
             response.put("user_id", user.getId());
             response.put("account_number", wallet.getAccountNumber());
+            response.put("alternative_account_number", wallet.getAlternativeAccountNumber());
             response.put("phone", phone);
             response.put("verification_token", profile.getPhoneVerificationToken());
             response.put("access_token", accessToken);
@@ -499,8 +500,8 @@ public class UserRegistrationService {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            // Find wallet by account number, then get user profile
-            Optional<Wallet> walletOpt = walletRepository.findByAccountNumber(accountNumber);
+            // Find wallet by account number (check both primary and alternative)
+            Optional<Wallet> walletOpt = walletRepository.findByAccountNumberOrAlternativeAccountNumber(accountNumber, accountNumber);
             
             if (walletOpt.isEmpty()) {
                 response.put("success", false);
@@ -546,6 +547,93 @@ public class UserRegistrationService {
         }
         
         return response;
+    }
+
+    /**
+     * Get user information by phone number (which is now the account number)
+     */
+    public Map<String, Object> getUserByPhoneNumber(String phoneNumber) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // Extract phone digits to match account number format
+            String phoneDigits = extractPhoneDigitsForLookup(phoneNumber);
+            
+            // Find wallet by account number (phone-based)
+            Optional<Wallet> walletOpt = walletRepository.findByAccountNumber(phoneDigits);
+            
+            if (walletOpt.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Phone number not registered");
+                return response;
+            }
+            
+            Wallet wallet = walletOpt.get();
+            User user = wallet.getUser();
+            UserProfile profile = userProfileRepository.findByUser(user).orElse(null);
+            
+            if (profile == null) {
+                response.put("success", false);
+                response.put("message", "User profile not found");
+                return response;
+            }
+            
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("username", user.getUsername());
+            userData.put("email", user.getEmail());
+            userData.put("phone", profile.getPhone());
+            userData.put("account_number", wallet.getAccountNumber());
+            userData.put("is_verified", profile.getIsVerified());
+            userData.put("enabled", user.isEnabled());
+            userData.put("created_at", profile.getCreatedAt());
+            
+            // Get KYC level if exists
+            Optional<KYCProfile> kycOpt = kycProfileRepository.findByUserId(user.getId());
+            if (kycOpt.isPresent()) {
+                KYCProfile kyc = kycOpt.get();
+                userData.put("kyc_level", kyc.getKycLevel());
+                userData.put("kyc_approved", kyc.getIsApproved());
+                userData.put("daily_limit", kyc.getDailyTransactionLimit());
+                userData.put("max_balance", kyc.getMaxBalanceLimit());
+            }
+            
+            response.put("success", true);
+            response.put("user", userData);
+            
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Failed to retrieve user: " + e.getMessage());
+        }
+        
+        return response;
+    }
+
+    /**
+     * Extract phone number digits for lookup (same logic as wallet service)
+     */
+    private String extractPhoneDigitsForLookup(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Phone number cannot be null or empty");
+        }
+        
+        // Remove all non-digit characters
+        String digitsOnly = phoneNumber.replaceAll("\\D", "");
+        
+        // Handle Nigerian phone numbers
+        if (digitsOnly.startsWith("234")) {
+            // Remove country code +234 and use the remaining 10 digits
+            digitsOnly = digitsOnly.substring(3);
+        } else if (digitsOnly.startsWith("0")) {
+            // Remove leading 0 for local format (e.g., 07038655955 -> 7038655955)
+            digitsOnly = digitsOnly.substring(1);
+        }
+        
+        // Ensure we have exactly 10 digits for account number
+        if (digitsOnly.length() != 10) {
+            throw new IllegalArgumentException("Invalid phone number format. Expected 10 digits after processing.");
+        }
+        
+        return digitsOnly;
     }
     
     /**

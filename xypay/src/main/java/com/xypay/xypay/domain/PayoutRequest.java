@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
-import java.util.UUID;
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -71,7 +71,7 @@ public class PayoutRequest extends BaseEntity {
 
     private void generateReference() {
         if (this.reference == null) {
-            this.reference = "PO-" + UUID.randomUUID().toString().substring(0, 10).toUpperCase();
+            this.reference = "PO-" + System.currentTimeMillis() + "-" + (int)(Math.random() * 10000);
         }
     }
 

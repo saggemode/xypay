@@ -15,8 +15,8 @@ public class LoanController {
     private LoanService loanService;
 
     @PostMapping("/originate")
-    public ResponseEntity<Loan> originateLoan(@RequestParam Long customerId, @RequestParam BigDecimal amount, @RequestParam String currency, @RequestParam int termMonths) {
-        return ResponseEntity.ok(loanService.originateLoan(customerId, amount, currency, termMonths));
+    public ResponseEntity<Loan> originateLoan(@RequestParam Long customerId, @RequestParam Long productId, @RequestParam BigDecimal amount) {
+        return ResponseEntity.ok(loanService.originateLoan(customerId, productId, amount));
     }
 
     @GetMapping("/{loanId}")

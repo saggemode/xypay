@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ChannelRepository extends JpaRepository<Channel, Long> {
     List<Channel> findByBranchId(String branchId);
+    List<Channel> findByChannelTypeAndIsActiveTrue(String channelType);
+    List<Channel> findByIsActiveTrue();
 }

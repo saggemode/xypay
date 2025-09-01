@@ -3,7 +3,7 @@ package com.xypay.xypay.config;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @Data
 @Entity
@@ -11,8 +11,8 @@ import java.util.UUID;
 public class WorkflowConfiguration {
     
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "workflow_name")
     private String workflowName;

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -12,8 +11,8 @@ import java.util.UUID;
 public class ChargeConfiguration {
     
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "charge_name")
     private String chargeName;

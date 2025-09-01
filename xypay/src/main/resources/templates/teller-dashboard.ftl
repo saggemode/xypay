@@ -3,157 +3,474 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teller Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: #f8fafc; }
-        .dashboard-header { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 32px 24px; margin-bottom: 32px; }
-        .dashboard-header h1 { font-size: 2.2rem; font-weight: 700; color: #2d3748; }
-        .dashboard-header p { color: #4a5568; }
-        .dashboard-actions { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 32px; }
-        .dashboard-action { flex: 1 1 220px; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px; text-align: center; transition: box-shadow 0.2s; }
-        .dashboard-action:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-        .dashboard-action i { font-size: 2.5rem; color: #3182ce; margin-bottom: 12px; }
-        .dashboard-action a { display: block; margin-top: 12px; font-weight: 600; color: #3182ce; text-decoration: none; }
-        .dashboard-action a:focus { outline: 2px solid #3182ce; outline-offset: 2px; }
-        .notifications-area { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px; margin-bottom: 32px; }
-        .notifications-area h2 { font-size: 1.3rem; font-weight: 600; color: #2d3748; margin-bottom: 16px; }
-        .notification { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #2d3748; }
-        .notification:last-child { border-bottom: none; }
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
-    </style>
-    <script>
-        // Simulate real-time notifications (replace with AJAX/websocket in production)
-        function addNotification(msg) {
-            const area = document.getElementById('notifications-list');
-            const div = document.createElement('div');
-            div.className = 'notification';
-            div.innerText = msg;
-            area.prepend(div);
-        }
-        // Example: Add a notification every 10 seconds
-        setInterval(() => {
-            const now = new Date().toLocaleTimeString();
-            addNotification('[' + now + '] New transaction processed.');
-        }, 10000);
-    </script>
+    <title>XyPay Teller Station - Java Style</title>
+    <link rel="stylesheet" href="/css/java-swing-style.css">
 </head>
 <body>
-    <main class="container py-4" aria-label="Teller Dashboard">
-        <div class="dashboard-header mb-4">
-            <h1>Teller Dashboard <span class="sr-only">Main area for teller operations</span></h1>
-            <p>Welcome, Teller! Here you can handle deposits, withdrawals, check cashing, and account lookups.</p>
-        </div>
-        <div class="dashboard-actions mb-4" role="navigation" aria-label="Teller actions">
-            <div class="dashboard-action" tabindex="0">
-                <i class="fas fa-money-bill-wave"></i>
-                <div>Deposit</div>
-                <a href="/teller/deposit" aria-label="Deposit funds">Go to Deposit</a>
-            </div>
-            <div class="dashboard-action" tabindex="0">
-                <i class="fas fa-hand-holding-usd"></i>
-                <div>Withdrawal</div>
-                <a href="/teller/withdrawal" aria-label="Withdraw funds">Go to Withdrawal</a>
-            </div>
-            <div class="dashboard-action" tabindex="0">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <div>Check Cashing</div>
-                <a href="/teller/check-cashing" aria-label="Check cashing">Go to Check Cashing</a>
-            </div>
-            <div class="dashboard-action" tabindex="0">
-                <i class="fas fa-search"></i>
-                <div>Account Lookup</div>
-                <a href="/teller/account-lookup" aria-label="Account lookup">Go to Account Lookup</a>
+    <div class="java-window">
+        <!-- Title Bar -->
+        <div class="title-bar">
+            <span>XyPay Teller Station - Transaction Processing Interface</span>
+            <div class="window-controls">
+                <div class="window-btn">_</div>
+                <div class="window-btn">□</div>
+                <div class="window-btn">×</div>
             </div>
         </div>
-        <div class="analytics-dashboard mb-4">
-            <h2 class="mb-3">Real-Time Analytics</h2>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="card p-3">
-                        <h5>Transactions (Last 24h)</h5>
-                        <canvas id="tellerTransactionsChart"></canvas>
-                        <button class="btn btn-outline-primary btn-sm mt-2" onclick="exportChart('tellerTransactions')">Export Report</button>
-                    </div>
+        
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <span class="menu-item">File</span>
+            <span class="menu-item">Transaction</span>
+            <span class="menu-item">Account</span>
+            <span class="menu-item">Reports</span>
+            <span class="menu-item">Tools</span>
+            <span class="menu-item">Help</span>
+        </div>
+        
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <button class="toolbar-btn">New Trans</button>
+            <button class="toolbar-btn">Lookup</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn">Deposit</button>
+            <button class="toolbar-btn">Withdraw</button>
+            <button class="toolbar-btn">Transfer</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn">Balance</button>
+            <button class="toolbar-btn">History</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn">Print</button>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Left Navigation Panel -->
+            <div class="tree-panel">
+                <div class="tree-header">Teller Operations</div>
+                
+                <div class="tree-node selected" onclick="selectOperation(this, 'dashboard')">
+                    <div class="tree-icon">🏠</div>
+                    Dashboard
                 </div>
-                <div class="col-md-6">
-                    <div class="card p-3">
-                        <h5>Cash Flow</h5>
-                        <canvas id="cashFlowChart"></canvas>
-                        <button class="btn btn-outline-primary btn-sm mt-2" onclick="exportChart('cashFlow')">Export Report</button>
+                
+                <div class="tree-node" onclick="selectOperation(this, 'deposit')">
+                    <div class="tree-icon">💵</div>
+                    Cash Deposit
+                </div>
+                
+                <div class="tree-node" onclick="selectOperation(this, 'withdrawal')">
+                    <div class="tree-icon">💸</div>
+                    Cash Withdrawal
+                </div>
+                
+                <div class="tree-node" onclick="selectOperation(this, 'check')">
+                    <div class="tree-icon">📄</div>
+                    Check Cashing
+                </div>
+                
+                <div class="tree-node" onclick="selectOperation(this, 'lookup')">
+                    <div class="tree-icon">🔍</div>
+                    Account Lookup
+                </div>
+                
+                <div class="tree-node" onclick="selectOperation(this, 'balance')">
+                    <div class="tree-icon">⚖️</div>
+                    Balance Inquiry
+                </div>
+                
+                <div class="tree-node" onclick="selectOperation(this, 'history')">
+                    <div class="tree-icon">📊</div>
+                    Transaction History
+                </div>
+            </div>
+            
+            <!-- Right Details Panel -->
+            <div class="details-panel">
+                <div class="details-header">Teller Operations Center</div>
+                <div class="details-content" id="operation-content">
+                    
+                    <!-- Dashboard Content -->
+                    <div class="config-section">
+                        <div class="config-header">Welcome, Teller</div>
+                        <div class="config-content">
+                            <p>Ready to process customer transactions. Select an operation from the left panel.</p>
+                            <p><strong>Shift Status:</strong> <span style="color: green;">Active</span> | <strong>Till Balance:</strong> $<span id="tillBalance">5,000.00</span></p>
+                        </div>
                     </div>
+                    
+                    <!-- Quick Transaction Panel -->
+                    <div class="config-section">
+                        <div class="config-header">Quick Transaction Access</div>
+                        <div class="config-content">
+                            <table class="java-table">
+                                <tr>
+                                    <th>Operation</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr>
+                                    <td>💵 Cash Deposit</td>
+                                    <td>Process customer cash deposits</td>
+                                    <td style="color: green;">Available</td>
+                                    <td><button class="java-btn" onclick="selectOperation(null, 'deposit')">Start</button></td>
+                                </tr>
+                                <tr>
+                                    <td>💸 Cash Withdrawal</td>
+                                    <td>Process customer withdrawals</td>
+                                    <td style="color: green;">Available</td>
+                                    <td><button class="java-btn" onclick="selectOperation(null, 'withdrawal')">Start</button></td>
+                                </tr>
+                                <tr>
+                                    <td>📄 Check Cashing</td>
+                                    <td>Cash customer checks</td>
+                                    <td style="color: green;">Available</td>
+                                    <td><button class="java-btn" onclick="selectOperation(null, 'check')">Start</button></td>
+                                </tr>
+                                <tr>
+                                    <td>🔍 Account Lookup</td>
+                                    <td>Search customer accounts</td>
+                                    <td style="color: green;">Available</td>
+                                    <td><button class="java-btn" onclick="selectOperation(null, 'lookup')">Start</button></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Transactions -->
+                    <div class="config-section">
+                        <div class="config-header">Recent Transactions</div>
+                        <div class="config-content">
+                            <table class="java-table">
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Type</th>
+                                    <th>Account</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                                <tr>
+                                    <td id="trans1Time">--:--</td>
+                                    <td>DEPOSIT</td>
+                                    <td>****1234</td>
+                                    <td>$250.00</td>
+                                    <td style="color: green;">Complete</td>
+                                </tr>
+                                <tr>
+                                    <td id="trans2Time">--:--</td>
+                                    <td>WITHDRAWAL</td>
+                                    <td>****5678</td>
+                                    <td>$100.00</td>
+                                    <td style="color: green;">Complete</td>
+                                </tr>
+                                <tr>
+                                    <td id="trans3Time">--:--</td>
+                                    <td>CHECK_CASH</td>
+                                    <td>****9012</td>
+                                    <td>$75.50</td>
+                                    <td style="color: green;">Complete</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
-        <div class="row mb-4">
-    <div class="col-md-6">
-        <a href="/admin/workflow" class="btn btn-outline-primary w-100 mb-2">Run Workflow</a>
-    </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">AI/ML Tools</div>
-            <div class="card-body">
-                <button class="btn btn-sm btn-info" onclick="testCreditScore()">Credit Scoring</button>
-                <button class="btn btn-sm btn-warning" onclick="testFraudDetection()">Fraud Detection</button>
-                <div id="aiResult" class="mt-2"></div>
-            </div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>Teller Station Ready | Till: $<span id="statusTillBalance">5,000.00</span></span>
+            <span>Teller: <span id="tellerName">teller@xypay.com</span> | Shift: <span id="shiftTime">08:00-16:00</span></span>
         </div>
     </div>
-</div>
-        <div class="notifications-area" aria-live="polite" aria-atomic="true">
-            <h2>Real-Time Notifications</h2>
-            <div id="notifications-list">
-                <div class="notification">No new notifications.</div>
-            </div>
-        </div>
-    </main>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <script>
-        function randomData(len, min, max) {
-            return Array.from({length: len}, () => Math.floor(Math.random() * (max - min + 1)) + min);
+        function selectOperation(element, operationType) {
+            // Update tree selection
+            if (element) {
+                document.querySelectorAll('.tree-node').forEach(node => {
+                    node.classList.remove('selected');
+                });
+                element.classList.add('selected');
+            }
+            
+            // Load operation content
+            const content = document.getElementById('operation-content');
+            
+            switch(operationType) {
+                case 'deposit':
+                    content.innerHTML = getDepositContent();
+                    break;
+                case 'withdrawal':
+                    content.innerHTML = getWithdrawalContent();
+                    break;
+                case 'check':
+                    content.innerHTML = getCheckCashingContent();
+                    break;
+                case 'lookup':
+                    content.innerHTML = getAccountLookupContent();
+                    break;
+                case 'balance':
+                    content.innerHTML = getBalanceInquiryContent();
+                    break;
+                case 'history':
+                    content.innerHTML = getTransactionHistoryContent();
+                    break;
+                default:
+                    // Keep dashboard content
+                    break;
+            }
         }
-        const tellerTransactionsChart = new Chart(document.getElementById('tellerTransactionsChart'), {
-            type: 'line',
-            data: {
-                labels: [...Array(24).keys()].map(h => h + ':00'),
-                datasets: [{
-                    label: 'Transactions',
-                    data: randomData(24, 10, 50),
-                    borderColor: '#3182ce',
-                    backgroundColor: 'rgba(49,130,206,0.1)',
-                    fill: true
-                }]
-            },
-            options: {responsive: true, plugins: {legend: {display: false}}}
-        });
-        const cashFlowChart = new Chart(document.getElementById('cashFlowChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Deposits', 'Withdrawals', 'Check Cashing'],
-                datasets: [{
-                    label: 'Amount',
-                    data: randomData(3, 1000, 10000),
-                    backgroundColor: '#38a169'
-                }]
-            },
-            options: {responsive: true, plugins: {legend: {display: false}}}
-        });
-        function exportChart(type) {
-            alert('Exporting ' + type + ' report (demo only).');
+        
+        function getDepositContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Cash Deposit Transaction</div>
+                    <div class="config-content">
+                        <div class="form-row">
+                            <span class="form-label">Account Number:</span>
+                            <input type="text" class="form-input" placeholder="Enter account number">
+                            <button class="java-btn">Verify</button>
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">Customer Name:</span>
+                            <input type="text" class="form-input" placeholder="Auto-filled after verification">
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">Deposit Amount:</span>
+                            <input type="number" class="form-input" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">Notes:</span>
+                            <input type="text" class="form-input" placeholder="Optional transaction notes">
+                        </div>
+                        <div style="margin-top: 16px; text-align: center;">
+                            <button class="java-btn primary">Process Deposit</button>
+                            <button class="java-btn">Clear Form</button>
+                            <button class="java-btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
-function testCreditScore() {
-    fetch('/api/ai/credit-score', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customerId:1})})
-    .then(r=>r.json()).then(d=>{
-        document.getElementById('aiResult').innerHTML = 'Credit Score: '+d.score+'<br>Risk: '+d.risk;
-    });
-}
-function testFraudDetection() {
-    fetch('/api/ai/fraud-detection', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:1000})})
-    .then(r=>r.json()).then(d=>{
-        document.getElementById('aiResult').innerHTML = 'Suspicious: '+d.suspicious+'<br>Reason: '+d.reason;
-    });
-}
+        
+        function getWithdrawalContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Cash Withdrawal Transaction</div>
+                    <div class="config-content">
+                        <div class="form-row">
+                            <span class="form-label">Account Number:</span>
+                            <input type="text" class="form-input" placeholder="Enter account number">
+                            <button class="java-btn">Verify</button>
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">Available Balance:</span>
+                            <span style="color: green; font-weight: bold;">$1,250.00</span>
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">Withdrawal Amount:</span>
+                            <input type="number" class="form-input" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">PIN Verification:</span>
+                            <input type="password" class="form-input" placeholder="Customer PIN">
+                            <button class="java-btn">Verify PIN</button>
+                        </div>
+                        <div style="margin-top: 16px; text-align: center;">
+                            <button class="java-btn primary">Process Withdrawal</button>
+                            <button class="java-btn">Clear Form</button>
+                            <button class="java-btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getCheckCashingContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Check Cashing Service</div>
+                    <div class="config-content">
+                        <div class="form-row">
+                            <span class="form-label">Check Number:</span>
+                            <input type="text" class="form-input" placeholder="Enter check number">
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">Check Amount:</span>
+                            <input type="number" class="form-input" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">Payee Account:</span>
+                            <input type="text" class="form-input" placeholder="Account to credit">
+                            <button class="java-btn">Verify</button>
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">ID Verification:</span>
+                            <select class="form-select">
+                                <option>Driver's License</option>
+                                <option>Passport</option>
+                                <option>National ID</option>
+                            </select>
+                        </div>
+                        <div style="margin-top: 16px; text-align: center;">
+                            <button class="java-btn primary">Cash Check</button>
+                            <button class="java-btn">Hold Check</button>
+                            <button class="java-btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getAccountLookupContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Account Lookup & Search</div>
+                    <div class="config-content">
+                        <div class="form-row">
+                            <span class="form-label">Search By:</span>
+                            <select class="form-select">
+                                <option>Account Number</option>
+                                <option>Phone Number</option>
+                                <option>Customer Name</option>
+                                <option>Email Address</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <span class="form-label">Search Value:</span>
+                            <input type="text" class="form-input" placeholder="Enter search criteria">
+                            <button class="java-btn primary">Search</button>
+                        </div>
+                        <table class="java-table" style="margin-top: 16px;">
+                            <tr>
+                                <th>Account</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Balance</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>****1234</td>
+                                <td>John Doe</td>
+                                <td>+234-xxx-xxxx</td>
+                                <td>$1,250.00</td>
+                                <td style="color: green;">Active</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getBalanceInquiryContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Balance Inquiry</div>
+                    <div class="config-content">
+                        <div class="form-row">
+                            <span class="form-label">Account Number:</span>
+                            <input type="text" class="form-input" placeholder="Enter account number">
+                            <button class="java-btn">Check Balance</button>
+                        </div>
+                        <div style="margin-top: 16px; padding: 12px; background: #f8f8f8; border: 1px inset #c0c0c0;">
+                            <div class="form-row">
+                                <span class="form-label">Available Balance:</span>
+                                <span style="color: green; font-weight: bold; font-size: 14px;">$1,250.00</span>
+                            </div>
+                            <div class="form-row">
+                                <span class="form-label">Pending Transactions:</span>
+                                <span>$0.00</span>
+                            </div>
+                            <div class="form-row">
+                                <span class="form-label">Last Transaction:</span>
+                                <span>Deposit $100.00 - Today 10:30 AM</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 16px; text-align: center;">
+                            <button class="java-btn">Print Balance</button>
+                            <button class="java-btn">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function getTransactionHistoryContent() {
+            return `
+                <div class="config-section">
+                    <div class="config-header">Transaction History</div>
+                    <div class="config-content">
+                        <div class="form-row">
+                            <span class="form-label">Account Number:</span>
+                            <input type="text" class="form-input" placeholder="Enter account number">
+                            <button class="java-btn">Load History</button>
+                        </div>
+                        <table class="java-table" style="margin-top: 16px;">
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Balance</th>
+                                <th>Reference</th>
+                            </tr>
+                            <tr>
+                                <td>2024-01-15</td>
+                                <td>DEPOSIT</td>
+                                <td style="color: green;">+$100.00</td>
+                                <td>$1,250.00</td>
+                                <td>TXN001234</td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-14</td>
+                                <td>WITHDRAWAL</td>
+                                <td style="color: red;">-$50.00</td>
+                                <td>$1,150.00</td>
+                                <td>TXN001233</td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-13</td>
+                                <td>TRANSFER</td>
+                                <td style="color: red;">-$200.00</td>
+                                <td>$1,200.00</td>
+                                <td>TXN001232</td>
+                            </tr>
+                        </table>
+                        <div style="margin-top: 16px; text-align: center;">
+                            <button class="java-btn">Export PDF</button>
+                            <button class="java-btn">Print Report</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Initialize dashboard
+        window.onload = function() {
+            // Set current time for recent transactions
+            const now = new Date();
+            document.getElementById('trans1Time').textContent = new Date(now.getTime() - 300000).toLocaleTimeString();
+            document.getElementById('trans2Time').textContent = new Date(now.getTime() - 600000).toLocaleTimeString();
+            document.getElementById('trans3Time').textContent = new Date(now.getTime() - 900000).toLocaleTimeString();
+            
+            // Set teller info
+            document.getElementById('tellerName').textContent = 'teller@xypay.com';
+            document.getElementById('shiftTime').textContent = '08:00-16:00';
+        };
+        
+        // Add notification simulation
+        setInterval(() => {
+            const notifications = [
+                'New customer deposit processed',
+                'Till balance updated',
+                'Transaction verification complete',
+                'System backup completed'
+            ];
+            const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
+            console.log('[' + new Date().toLocaleTimeString() + '] ' + randomNotification);
+        }, 10000);
     </script>
 </body>
 </html>

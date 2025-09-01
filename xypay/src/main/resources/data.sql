@@ -52,6 +52,31 @@ CREATE TABLE IF NOT EXISTS users (
     last_login TIMESTAMP
 );
 
+-- Banks table
+CREATE TABLE IF NOT EXISTS banks (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    code VARCHAR(10) NOT NULL UNIQUE,
+    swift_code VARCHAR(11),
+    country_code VARCHAR(3),
+    slug VARCHAR(255),
+    ussd VARCHAR(20),
+    logo VARCHAR(255),
+    is_active BOOLEAN DEFAULT true,
+    bank_type VARCHAR(20) DEFAULT 'COMMERCIAL',
+    license_number VARCHAR(50),
+    regulatory_authority VARCHAR(100),
+    head_office_address VARCHAR(500),
+    contact_email VARCHAR(100),
+    contact_phone VARCHAR(20),
+    established_date TIMESTAMP,
+    capital_adequacy_ratio DECIMAL(5,2),
+    tier1_capital DECIMAL(19,2),
+    total_assets DECIMAL(19,2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
 -- User roles mapping table
 CREATE TABLE IF NOT EXISTS user_roles (
     user_id INTEGER NOT NULL,
@@ -64,9 +89,11 @@ CREATE TABLE IF NOT EXISTS user_roles (
     FOREIGN KEY (assigned_by) REFERENCES users(id)
 );
 
--- Branches table
+-- Branches table - Create only if it doesn't exist
+-- Note: We're not adding the bank_id column or foreign key constraint here to avoid issues with existing tables
 CREATE TABLE IF NOT EXISTS branches (
     id SERIAL PRIMARY KEY,
+    bank_id BIGINT,
     code VARCHAR(20) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
     address TEXT,
@@ -145,7 +172,14 @@ INSERT INTO roles (name, description) VALUES
     ('AUDITOR', 'Auditor with read-only access to reports')
 ON CONFLICT (name) DO NOTHING;
 
+-- Insert default bank
+INSERT INTO banks (name, code, swift_code, country_code) VALUES 
+    ('XY Bank', 'XY001', 'XYBKUS11', 'USA')
+ON CONFLICT (code) DO NOTHING;
+
 -- Insert default branch
-INSERT INTO branches (code, name, address, city, state, country) VALUES 
-    ('HQ001', 'Headquarters', '123 Main Street', 'New York', 'NY', 'USA')
+INSERT INTO branches (bank_id, code, name, address, city, state, country) 
+SELECT b.id, 'HQ001', 'Headquarters', '123 Main Street', 'New York', 'NY', 'USA' 
+FROM banks b 
+WHERE b.code = 'XY001'
 ON CONFLICT (code) DO NOTHING;

@@ -3,7 +3,7 @@ package com.xypay.xypay.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
-import java.util.UUID;
+
 
 @Data
 @Entity
@@ -11,8 +11,8 @@ import java.util.UUID;
 public class GLAccount {
     
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     private String code;
     

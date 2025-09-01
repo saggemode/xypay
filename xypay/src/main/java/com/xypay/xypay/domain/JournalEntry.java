@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @Data
 @Entity
@@ -12,8 +12,8 @@ import java.util.UUID;
 public class JournalEntry {
     
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "tx_id")
     private Long txId;

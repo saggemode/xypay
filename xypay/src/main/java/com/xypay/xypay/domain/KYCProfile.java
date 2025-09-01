@@ -1,13 +1,14 @@
 package com.xypay.xypay.domain;
 
 import jakarta.persistence.*;
+
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Entity
 @Table(name = "kyc_profiles")
@@ -65,8 +66,8 @@ public class KYCProfile {
     }
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -321,11 +322,11 @@ public class KYCProfile {
     }
     
     // Getters and Setters
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
     
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
     

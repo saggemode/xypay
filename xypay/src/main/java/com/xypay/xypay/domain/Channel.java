@@ -1,8 +1,11 @@
 package com.xypay.xypay.domain;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Data
 @Entity
 @Table(name = "channels")
 public class Channel {
@@ -14,15 +17,51 @@ public class Channel {
     private String name;
     
     @Column(name = "channel_type")
-    private String channelType; // ATM, INTERNET_BANKING, MOBILE, BRANCH
+    private String channelType; // ATM, INTERNET_BANKING, MOBILE, BRANCH, API
     
     @Column(name = "branch_id")
     private String branchId;
     
-    private String status;
+    private String status; // ACTIVE, INACTIVE, MAINTENANCE
+    
+    @Column(name = "endpoint_url")
+    private String endpointUrl;
+    
+    @Column(name = "api_key")
+    private String apiKey;
+    
+    @Column(name = "configuration")
+    @Lob
+    private String configuration; // JSON configuration for channel-specific settings
+    
+    @Column(name = "max_transaction_limit")
+    private java.math.BigDecimal maxTransactionLimit;
+    
+    @Column(name = "daily_limit")
+    private java.math.BigDecimal dailyLimit;
+    
+    @Column(name = "is_active")
+    private Boolean isActive = true;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+    
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+    
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
+    private List<ChannelTransaction> transactions;
+    
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+    
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     // Getters and Setters
     public Long getId() {

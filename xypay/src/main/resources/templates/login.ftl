@@ -3,59 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XY Pay - Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>XyPay Login - Java Style</title>
+    <link rel="stylesheet" href="/css/java-swing-style.css">
+    <style>
+        .login-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background: #e8e8e8;
+            border: 2px outset #c0c0c0;
+            z-index: 1000;
+        }
+        
+        .login-content {
+            padding: 20px;
+        }
+        
+        .login-field {
+            margin-bottom: 16px;
+        }
+        
+        .login-field label {
+            display: block;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        
+        .login-field input {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px inset #c0c0c0;
+            font-size: 12px;
+        }
+        
+        .login-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .error-panel {
+            background: #ffe0e0;
+            border: 1px solid #ff8080;
+            padding: 8px;
+            margin-bottom: 16px;
+            font-size: 11px;
+            color: #cc0000;
+        }
+        
+        .info-panel {
+            background: #e0f0ff;
+            border: 1px solid #80c0ff;
+            padding: 8px;
+            margin-bottom: 16px;
+            font-size: 11px;
+            color: #0066cc;
+        }
+        
+        .login-footer {
+            background: #f0f0f0;
+            border-top: 1px solid #a0a0a0;
+            padding: 8px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container">
-        <div class="row justify-content-center align-items-center min-vh-100">
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow">
-                    <div class="card-header text-center bg-primary text-white">
-                        <h4><i class="fas fa-lock me-2"></i>XY Pay Admin Login</h4>
-                    </div>
-                    <div class="card-body">
-                        <#if RequestParameters.error??>
-                            <div class="alert alert-danger">
-                                Invalid username or password.
-                            </div>
-                        </#if>
-                        <#if RequestParameters.logout??>
-                            <div class="alert alert-info">
-                                You have been logged out.
-                            </div>
-                        </#if>
+<body>
+    <div class="java-window">
+        <!-- Title Bar -->
+        <div class="title-bar">
+            <span>XyPay Authentication System</span>
+            <div class="window-controls">
+                <div class="window-btn">_</div>
+                <div class="window-btn">□</div>
+                <div class="window-btn">×</div>
+            </div>
+        </div>
+        
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <span class="menu-item">File</span>
+            <span class="menu-item">Options</span>
+            <span class="menu-item">Help</span>
+        </div>
+        
+        <!-- Main Content -->
+        <div style="padding: 40px; text-align: center; background: #f0f0f0; min-height: 400px;">
+            
+            <!-- Login Dialog -->
+            <div class="login-dialog">
+                <div class="title-bar">
+                    <span>🔐 XyPay Admin Login</span>
+                </div>
+                
+                <div class="login-content">
+                    <#if RequestParameters.error??>
+                        <div class="error-panel">
+                            ❌ Invalid username or password.
+                        </div>
+                    </#if>
+                    <#if RequestParameters.logout??>
+                        <div class="info-panel">
+                            ℹ️ You have been logged out successfully.
+                        </div>
+                    </#if>
+                    
+                    <form action="/login" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         
-                        <form action="/login" method="post">
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                    <input type="text" class="form-control" id="username" name="username" required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
-                                    <input type="password" class="form-control" id="password" name="password" required>
-                                </div>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Login</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="card-footer text-center">
-                        <small class="text-muted">XY Pay Core Banking System v1.0</small>
-                    </div>
+                        <div class="login-field">
+                            <label for="username">👤 Username:</label>
+                            <input type="text" id="username" name="username" required autocomplete="username">
+                        </div>
+                        
+                        <div class="login-field">
+                            <label for="password">🔑 Password:</label>
+                            <input type="password" id="password" name="password" required autocomplete="current-password">
+                        </div>
+                        
+                        <div class="login-buttons">
+                            <button type="submit" class="java-btn primary">Login</button>
+                            <button type="button" class="java-btn" onclick="clearForm()">Clear</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="login-footer">
+                    XyPay Core Banking System v2.1.0 - Java Style Interface
                 </div>
             </div>
         </div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>Authentication Required | Please enter your credentials</span>
+            <span>Secure Connection | SSL Enabled</span>
+        </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function clearForm() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('username').focus();
+        }
+        
+        // Focus on username field when page loads
+        window.onload = function() {
+            document.getElementById('username').focus();
+        };
+        
+        // Enter key handling
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                document.querySelector('form').submit();
+            }
+        });
+    </script>
 </body>
 </html>

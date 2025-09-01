@@ -60,6 +60,9 @@ public class Transaction extends BaseEntity {
     @Column(name = "direction", length = 10)
     private String direction; // CREDIT, DEBIT
     
+    @Column(name = "processed_at")
+    private LocalDateTime processedAt;
+    
     // Constructors
     public Transaction() {}
     
@@ -194,5 +197,13 @@ public class Transaction extends BaseEntity {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public LocalDateTime getProcessedAt() {
+        return processedAt;
+    }
+
+    public void setProcessedAt(LocalDateTime processedAt) {
+        this.processedAt = processedAt;
     }
 }

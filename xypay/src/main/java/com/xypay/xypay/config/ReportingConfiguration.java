@@ -3,7 +3,6 @@ package com.xypay.xypay.config;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -11,8 +10,8 @@ import java.util.UUID;
 public class ReportingConfiguration {
     
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "report_name")
     private String reportName;

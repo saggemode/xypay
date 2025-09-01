@@ -14,13 +14,13 @@ public class BranchController {
     private BranchService branchService;
 
     @PostMapping("/create")
-    public ResponseEntity<Branch> createBranch(@RequestParam String name, @RequestParam String code, @RequestParam String address) {
-        return ResponseEntity.ok(branchService.createBranch(name, code, address));
+    public ResponseEntity<Branch> createBranch(@RequestParam Long bankId, @RequestParam String name, @RequestParam String code, @RequestParam String address) {
+        return ResponseEntity.ok(branchService.createBranch(bankId, name, code, address));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Branch> getBranch(@PathVariable Long id) {
-        return ResponseEntity.ok(branchService.getBranch(id));
+        return ResponseEntity.ok(branchService.getBranchById(id));
     }
 
     @GetMapping

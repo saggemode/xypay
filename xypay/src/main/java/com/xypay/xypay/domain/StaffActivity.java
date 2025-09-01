@@ -2,7 +2,7 @@ package com.xypay.xypay.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 /**
  * Staff activity entity for logging staff actions.
@@ -13,8 +13,8 @@ import java.util.UUID;
 public class StaffActivity {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "staff_id", nullable = false)
@@ -58,11 +58,11 @@ public class StaffActivity {
     }
     
     // Getters and Setters
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
     
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
     

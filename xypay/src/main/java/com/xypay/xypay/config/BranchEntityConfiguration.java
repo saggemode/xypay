@@ -11,8 +11,8 @@ import java.util.UUID;
 public class BranchEntityConfiguration {
     
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(name = "branch_code")
     private String branchCode;

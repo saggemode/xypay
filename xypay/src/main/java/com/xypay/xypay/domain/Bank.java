@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -12,11 +14,17 @@ import java.math.BigDecimal;
 @Table(name = "banks")
 public class Bank extends BaseEntity {
     
-    @Column(name = "name", length = 100)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
     
-    @Column(name = "code", length = 10)
+    @Column(name = "code", length = 10, unique = true, nullable = false)
     private String code;
+    
+    @Column(name = "swift_code", length = 11)
+    private String swiftCode;
+    
+    @Column(name = "country_code", length = 3)
+    private String countryCode;
     
     @Column(name = "slug")
     private String slug;
@@ -29,6 +37,44 @@ public class Bank extends BaseEntity {
     
     @Column(name = "is_active")
     private Boolean isActive = true;
+    
+    @Column(name = "bank_type")
+    @Enumerated(EnumType.STRING)
+    private BankType bankType = BankType.COMMERCIAL;
+    
+    @Column(name = "license_number", length = 50)
+    private String licenseNumber;
+    
+    @Column(name = "regulatory_authority", length = 100)
+    private String regulatoryAuthority;
+    
+    @Column(name = "head_office_address", length = 500)
+    private String headOfficeAddress;
+    
+    @Column(name = "contact_email", length = 100)
+    private String contactEmail;
+    
+    @Column(name = "contact_phone", length = 20)
+    private String contactPhone;
+    
+    @Column(name = "established_date")
+    private LocalDateTime establishedDate;
+    
+    @Column(name = "capital_adequacy_ratio", precision = 5, scale = 2)
+    private BigDecimal capitalAdequacyRatio;
+    
+    @Column(name = "tier1_capital", precision = 19, scale = 2)
+    private BigDecimal tier1Capital;
+    
+    @Column(name = "total_assets", precision = 19, scale = 2)
+    private BigDecimal totalAssets;
+    
+    // Multi-entity relationships
+    @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Branch> branches;
+    
+    @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<BankCurrency> supportedCurrencies;
     
     // Additional Configuration
     @Column(name = "applies_to_fees")
@@ -50,6 +96,20 @@ public class Bank extends BaseEntity {
     // Rounding Configuration
     @Column(name = "rounding_method", length = 20)
     private String roundingMethod = "none"; // none, nearest, up, down
+    
+    // Basel III Compliance
+    @Column(name = "basel_compliant")
+    private Boolean baselCompliant = false;
+    
+    @Column(name = "ifrs_compliant")
+    private Boolean ifrsCompliant = false;
+    
+    @Column(name = "islamic_banking_enabled")
+    private Boolean islamicBankingEnabled = false;
+    
+    public enum BankType {
+        COMMERCIAL, INVESTMENT, CENTRAL, ISLAMIC, COOPERATIVE, DEVELOPMENT
+    }
     
     // Constructors
     public Bank() {}

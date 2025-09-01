@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/admin/reporting-workflow")
@@ -47,8 +47,8 @@ public class ReportingWorkflowAdminController {
     }
     
     @PutMapping("/reporting-config/{id}")
-    public ResponseEntity<ReportingConfiguration> updateReportingConfig(
-            @PathVariable UUID id,
+    public ResponseEntity<ReportingConfiguration> updateReportingConfiguration(
+            @PathVariable Long id,
             @RequestBody ReportingConfiguration config) {
         // In a real implementation, we would update the existing record
         ReportingConfiguration updatedConfig = configurationService.saveReportingConfiguration(config);
@@ -56,7 +56,7 @@ public class ReportingWorkflowAdminController {
     }
     
     @DeleteMapping("/reporting-config/{id}")
-    public ResponseEntity<Void> deleteReportingConfig(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteReportingConfiguration(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }
@@ -91,8 +91,8 @@ public class ReportingWorkflowAdminController {
     }
     
     @PutMapping("/workflow-config/{id}")
-    public ResponseEntity<WorkflowConfiguration> updateWorkflowConfig(
-            @PathVariable UUID id,
+    public ResponseEntity<WorkflowConfiguration> updateWorkflowConfiguration(
+            @PathVariable Long id,
             @RequestBody WorkflowConfiguration config) {
         // In a real implementation, we would update the existing record
         WorkflowConfiguration updatedConfig = configurationService.saveWorkflowConfiguration(config);
@@ -100,7 +100,7 @@ public class ReportingWorkflowAdminController {
     }
     
     @DeleteMapping("/workflow-config/{id}")
-    public ResponseEntity<Void> deleteWorkflowConfig(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteWorkflowConfiguration(@PathVariable Long id) {
         // In a real implementation, we would delete the record
         return ResponseEntity.ok().build();
     }

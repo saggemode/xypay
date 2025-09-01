@@ -713,6 +713,44 @@ public class NotificationService {
     }
 
     /**
+     * Send notification to user by ID with type and message
+     * @param userId User ID to send notification to
+     * @param notificationType Type of notification
+     * @param message Message to send
+     */
+    public void sendNotification(Long userId, String notificationType, String message) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                logger.warn("User not found for notification: {}", userId);
+                return;
+            }
+            
+            Notification notification = new Notification();
+            notification.setRecipient(user);
+            notification.setTitle(notificationType.replace("_", " "));
+            notification.setMessage(message);
+            
+            // Map string type to enum
+            try {
+                notification.setNotificationType(NotificationType.valueOf(notificationType));
+            } catch (IllegalArgumentException e) {
+                notification.setNotificationType(NotificationType.SYSTEM_ALERT);
+            }
+            
+            notification.setLevel(NotificationLevel.INFO);
+            notification.setStatus(NotificationStatus.SENT);
+            notification.setSource("workflow");
+            
+            notificationRepository.save(notification);
+            logger.info("Workflow notification sent to user {}: {}", userId, message);
+            
+        } catch (Exception e) {
+            logger.error("Failed to send workflow notification to user {}: {}", userId, e.getMessage());
+        }
+    }
+
+    /**
      * Get user full name helper method
      */
     private String getUserFullName(User user) {

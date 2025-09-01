@@ -3,72 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XY Pay - Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>XyPay Dashboard - Java Style</title>
+    <link rel="stylesheet" href="/css/java-swing-style.css">
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"><i class="fas fa-university me-2"></i>XY Pay</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+<body>
+    <div class="java-window">
+        <!-- Title Bar -->
+        <div class="title-bar">
+            <span>XyPay Dashboard - User Interface</span>
+            <div class="window-controls">
+                <div class="window-btn">_</div>
+                <div class="window-btn">□</div>
+                <div class="window-btn">×</div>
             </div>
         </div>
-    </nav>
-    
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-success">
-                            <i class="fas fa-check-circle me-2"></i>Welcome! You have successfully logged in to XY Pay.
+        
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <span class="menu-item">File</span>
+            <span class="menu-item">View</span>
+            <span class="menu-item">Tools</span>
+            <span class="menu-item">Window</span>
+            <span class="menu-item">Help</span>
+        </div>
+        
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <button class="toolbar-btn">Home</button>
+            <button class="toolbar-btn">Refresh</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn">Profile</button>
+            <button class="toolbar-btn">Settings</button>
+            <div class="toolbar-separator"></div>
+            <button class="toolbar-btn" onclick="window.location.href='/logout'">Logout</button>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Left Navigation Panel -->
+            <div class="tree-panel">
+                <div class="tree-header">Navigation</div>
+                
+                <div class="tree-node selected">
+                    <div class="tree-icon">🏠</div>
+                    Dashboard
+                </div>
+                
+                <div class="tree-node">
+                    <div class="tree-icon">👥</div>
+                    User Management
+                </div>
+                
+                <div class="tree-node">
+                    <div class="tree-icon">💰</div>
+                    Wallet Management
+                </div>
+                
+                <div class="tree-node">
+                    <div class="tree-icon">💳</div>
+                    Transactions
+                </div>
+                
+                <div class="tree-node">
+                    <div class="tree-icon">📊</div>
+                    Reports
+                </div>
+                
+                <div class="tree-node">
+                    <div class="tree-icon">⚙️</div>
+                    System Settings
+                </div>
+            </div>
+            
+            <!-- Right Details Panel -->
+            <div class="details-panel">
+                <div class="details-header">Dashboard Overview</div>
+                <div class="details-content">
+                    
+                    <!-- Welcome Message -->
+                    <div class="config-section">
+                        <div class="config-header">Welcome Message</div>
+                        <div class="config-content">
+                            <p>✓ Welcome! You have successfully logged in to XyPay.</p>
+                            <p>System Status: <strong>Online</strong> | Last Login: <span id="lastLogin"></span></p>
                         </div>
-                        
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="card text-white bg-info mb-3">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><i class="fas fa-users me-2"></i>Users</h5>
-                                        <p class="card-text">Manage system users</p>
-                                    </div>
-                                </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="config-section">
+                        <div class="config-header">Quick Actions</div>
+                        <div class="config-content">
+                            <table class="java-table">
+                                <tr>
+                                    <th>Module</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                <tr>
+                                    <td>👥 Users</td>
+                                    <td>Manage system users and permissions</td>
+                                    <td style="color: green;">Active</td>
+                                    <td><button class="java-btn">Open</button></td>
+                                </tr>
+                                <tr>
+                                    <td>💰 Wallets</td>
+                                    <td>View and manage wallet accounts</td>
+                                    <td style="color: green;">Active</td>
+                                    <td><button class="java-btn">Open</button></td>
+                                </tr>
+                                <tr>
+                                    <td>💳 Transactions</td>
+                                    <td>Monitor and process transactions</td>
+                                    <td style="color: green;">Active</td>
+                                    <td><button class="java-btn">Open</button></td>
+                                </tr>
+                                <tr>
+                                    <td>⚙️ Settings</td>
+                                    <td>System configuration and setup</td>
+                                    <td style="color: green;">Active</td>
+                                    <td><button class="java-btn">Open</button></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- System Information -->
+                    <div class="config-section">
+                        <div class="config-header">System Information</div>
+                        <div class="config-content">
+                            <div class="form-row">
+                                <span class="form-label">Server Status:</span>
+                                <span style="color: green; font-weight: bold;">Online</span>
                             </div>
-                            <div class="col-md-3">
-                                <div class="card text-white bg-success mb-3">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><i class="fas fa-wallet me-2"></i>Wallets</h5>
-                                        <p class="card-text">View wallet accounts</p>
-                                    </div>
-                                </div>
+                            <div class="form-row">
+                                <span class="form-label">Database:</span>
+                                <span style="color: green; font-weight: bold;">Connected</span>
                             </div>
-                            <div class="col-md-3">
-                                <div class="card text-white bg-warning mb-3">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><i class="fas fa-exchange-alt me-2"></i>Transactions</h5>
-                                        <p class="card-text">Monitor transactions</p>
-                                    </div>
-                                </div>
+                            <div class="form-row">
+                                <span class="form-label">Active Users:</span>
+                                <span id="activeUsers">Loading...</span>
                             </div>
-                            <div class="col-md-3">
-                                <div class="card text-white bg-danger mb-3">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><i class="fas fa-cog me-2"></i>Settings</h5>
-                                        <p class="card-text">System configuration</p>
-                                    </div>
-                                </div>
+                            <div class="form-row">
+                                <span class="form-label">System Version:</span>
+                                <span>XyPay v2.1.0</span>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Action Buttons -->
+                    <div style="margin-top: 16px; text-align: center;">
+                        <button class="java-btn primary">View Full Reports</button>
+                        <button class="java-btn">System Diagnostics</button>
+                        <button class="java-btn">Export Data</button>
+                    </div>
+                    
                 </div>
             </div>
         </div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>Ready | XyPay Dashboard Loaded Successfully</span>
+            <span>User: <span id="currentUser">Loading...</span> | Session Active</span>
+        </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize dashboard data
+        document.getElementById('lastLogin').textContent = new Date().toLocaleString();
+        document.getElementById('activeUsers').textContent = Math.floor(Math.random() * 50) + 10;
+        document.getElementById('currentUser').textContent = 'user@xypay.com';
+        
+        // Tree navigation
+        document.querySelectorAll('.tree-node').forEach(node => {
+            node.addEventListener('click', function() {
+                document.querySelectorAll('.tree-node').forEach(n => n.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    </script>
 </body>
 </html>

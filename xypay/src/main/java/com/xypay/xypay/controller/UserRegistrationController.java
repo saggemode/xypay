@@ -118,6 +118,22 @@ public class UserRegistrationController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    /**
+     * Get user information by phone number (fintech-style lookup)
+     * Example: GET /api/auth/user/phone/+2347038655955
+     * Example: GET /api/auth/user/phone/07038655955
+     */
+    @GetMapping("/user/phone/{phoneNumber}")
+    public ResponseEntity<Map<String, Object>> getUserByPhoneNumber(@PathVariable String phoneNumber) {
+        Map<String, Object> response = userRegistrationService.getUserByPhoneNumber(phoneNumber);
+        
+        if ((Boolean) response.get("success")) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
     
     /**
      * JWT-based OTP verification (only requires OTP code - user identified from JWT token)

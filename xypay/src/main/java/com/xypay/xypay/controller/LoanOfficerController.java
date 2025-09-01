@@ -21,8 +21,8 @@ public class LoanOfficerController {
     }
 
     @PostMapping("/loan-officer/application")
-    public String applyForLoan(@RequestParam String customerName, @RequestParam String amount, Model model) {
-        String result = loanOfficerService.applyForLoan(customerName, new java.math.BigDecimal(amount));
+    public String applyForLoan(@RequestParam Long customerId, @RequestParam Long productId, @RequestParam String amount, Model model) {
+        String result = loanOfficerService.applyForLoan(customerId, productId, new java.math.BigDecimal(amount));
         model.addAttribute("result", result);
         return "loan-officer-application";
     }
@@ -33,8 +33,8 @@ public class LoanOfficerController {
     }
 
     @PostMapping("/loan-officer/credit-check")
-    public String creditCheck(@RequestParam String customerName, Model model) {
-        String result = loanOfficerService.creditCheck(customerName);
+    public String creditCheck(@RequestParam Long customerId, Model model) {
+        String result = loanOfficerService.creditCheck(customerId);
         model.addAttribute("result", result);
         return "loan-officer-credit-check";
     }
@@ -74,8 +74,8 @@ public class LoanOfficerController {
     }
 
     @PostMapping("/loan-officer/risk-assessment")
-    public String riskAssessment(@RequestParam String customerName, Model model) {
-        String result = loanOfficerService.riskAssessment(customerName);
+    public String riskAssessment(@RequestParam Long customerId, Model model) {
+        String result = loanOfficerService.riskAssessment(customerId);
         model.addAttribute("result", result);
         return "loan-officer-risk-assessment";
     }

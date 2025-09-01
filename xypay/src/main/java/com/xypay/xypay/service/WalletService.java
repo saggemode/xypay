@@ -46,6 +46,29 @@ public class WalletService {
     }
 
     /**
+     * Create a new wallet for user with phone-based account number
+     */
+    public Wallet createWallet(User user, String currency, String phoneNumber) {
+        logger.info("Creating wallet for user {} with currency {} and phone-based account number", user.getUsername(), currency);
+
+        Wallet wallet = new Wallet();
+        wallet.setUser(user);
+        wallet.setCurrency(currency);
+        wallet.setBalance(BigDecimal.ZERO);
+        
+        // Use phone number as account number (extract digits only)
+        String phoneAccountNumber = extractPhoneDigitsAsAccountNumber(phoneNumber);
+        wallet.setAccountNumber(phoneAccountNumber);
+        wallet.setAlternativeAccountNumber(generateAlternativeAccountNumber());
+        wallet.setPhoneAlias(phoneNumber); // Store full phone number as alias
+
+        wallet = walletRepository.save(wallet);
+        logger.info("Wallet created with ID {} and phone-based account number {}", wallet.getId(), phoneAccountNumber);
+
+        return wallet;
+    }
+
+    /**
      * Get user's primary wallet
      */
     @Transactional(readOnly = true)
@@ -250,6 +273,52 @@ public class WalletService {
         
         // Ensure it's exactly 10 digits by padding with zeros if needed
         return String.format("%010d", Long.parseLong(altAccountNumber));
+    }
+
+    /**
+     * Extract phone number digits to use as account number
+     * Removes country code and formats as 10-digit account number
+     */
+    private String extractPhoneDigitsAsAccountNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Phone number cannot be null or empty");
+        }
+        
+        // Remove all non-digit characters
+        String digitsOnly = phoneNumber.replaceAll("\\D", "");
+        
+        // Handle Nigerian phone numbers
+        if (digitsOnly.startsWith("234")) {
+            // Remove country code +234 and use the remaining 10 digits
+            digitsOnly = digitsOnly.substring(3);
+        } else if (digitsOnly.startsWith("0")) {
+            // Remove leading 0 for local format (e.g., 07038655955 -> 7038655955)
+            digitsOnly = digitsOnly.substring(1);
+        }
+        
+        // Ensure we have exactly 10 digits for account number
+        if (digitsOnly.length() != 10) {
+            throw new IllegalArgumentException("Invalid phone number format. Expected 10 digits after processing.");
+        }
+        
+        return digitsOnly;
+    }
+
+    /**
+     * Find wallet by phone number (account number)
+     */
+    @Transactional(readOnly = true)
+    public Optional<Wallet> getWalletByPhoneNumber(String phoneNumber) {
+        String phoneAccountNumber = extractPhoneDigitsAsAccountNumber(phoneNumber);
+        return walletRepository.findByAccountNumberOrAlternativeAccountNumber(phoneAccountNumber, phoneAccountNumber);
+    }
+
+    /**
+     * Find wallet by any account number (primary or alternative)
+     */
+    @Transactional(readOnly = true)
+    public Optional<Wallet> getWalletByAnyAccountNumber(String accountNumber) {
+        return walletRepository.findByAccountNumberOrAlternativeAccountNumber(accountNumber, accountNumber);
     }
 
     /**

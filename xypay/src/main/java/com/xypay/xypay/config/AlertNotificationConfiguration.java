@@ -4,13 +4,13 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Data;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @Data
 @Configuration
 public class AlertNotificationConfiguration {
     
-    private UUID id;
+    private Long id;
     
     private String alertName;
     

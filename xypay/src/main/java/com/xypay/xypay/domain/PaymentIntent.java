@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -108,7 +107,7 @@ public class PaymentIntent extends BaseEntity {
         if (this.reference == null) {
             String dateStr = LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
             String timeStr = LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HHmmss"));
-            String uniquePart = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+            String uniquePart = String.valueOf(System.currentTimeMillis()).substring(7);
             String suffix = user != null && user.getWallet() != null ? 
                 user.getWallet().getAccountNumber().substring(Math.max(0, user.getWallet().getAccountNumber().length() - 4)) : "0000";
             this.reference = String.format("PI-%s-%s-%s-%s", dateStr, timeStr, suffix, uniquePart);
